@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<!-- Navigation Bar -->
+<nav class="bg-white shadow-md">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+        <a th:href="@{/home}" class="text-xl font-bold text-gray-800">My Application</a>
+        <div>
+            <a th:href="@{/shop}" class="text-gray-700 hover:text-indigo-600 mr-6">Shop</a>
+            <a th:href="@{/logout}" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">My Account</h1>
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="mb-6 p-4 text-sm text-white bg-green-500 rounded-lg shadow-md" role="alert">
+        <span class="font-medium">Success!</span> [[${successMessage}]]
+    </div>
+    <div th:if="${errorMessage}" class="mb-6 p-4 text-sm text-white bg-red-500 rounded-lg shadow-md" role="alert">
+        <span class="font-medium">Oops!</span> [[${errorMessage}]]
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column: Profile & Wallet -->
+        <div class="lg:col-span-1 space-y-8">
+            <!-- Profile Card -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 border-b pb-3">Profile Information</h2>
+                <div class="space-y-3 mt-4 text-gray-700">
+                    <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+                    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                </div>
+            </div>
+
+            <!-- Wallet Card -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 border-b pb-3">My Wallet</h2>
+                <div class="mt-4">
+                    <p class="text-gray-600">Current Balance</p>
+                    <p class="text-3xl font-bold text-green-600" th:text="${#numbers.formatCurrency(user.balance)}"></p>
+                </div>
+                <form th:action="@{/account/deposit}" method="post" class="mt-6">
+                    <label for="amount" class="block text-sm font-medium text-gray-700">Deposit Amount</label>
+                    <div class="mt-1 flex">
+                        <input type="number" name="amount" id="amount" step="0.01" min="0.01" required class="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-r-md hover:bg-indigo-700">Deposit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: Order History -->
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-800 border-b pb-3 mb-4">Order History</h2>
+            <div th:if="${!orders.isEmpty()}" class="space-y-4">
+                <!-- Loop through orders -->
+                <div th:each="order : ${orders}" class="border rounded-lg p-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="font-bold">Order #[[${order.id}]]</p>
+                            <p class="text-sm text-gray-500">Date: <span th:text="${#temporals.format(order.orderDate, 'dd-MMM-yyyy HH:mm')}"></span></p>
+                        </div>
+                        <p class="font-bold text-lg" th:text="${#numbers.formatCurrency(order.totalAmount)}"></p>
+                    </div>
+                    <!-- Order Items -->
+                    <div class="mt-3 border-t pt-3 space-y-3">
+                        <div th:each="item : ${order.orderItems}" class="flex justify-between items-center text-sm">
+                            <div class="flex items-center">
+                                <img th:src="${item.product.imageUrl}" th:alt="${item.product.name}" class="h-12 w-12 rounded-md object-cover mr-4"
+                                     onerror="this.onerror=null;this.src='https://placehold.co/48x48/e2e8f0/4a5568?text=N/A';">
+                                <div>
+                                    <span class="font-medium text-gray-800">[[${item.product.name}]]</span>
+                                    <span class="text-gray-500 block">Qty: [[${item.quantity}]]</span>
+                                </div>
+                            </div>
+                            <span class="font-semibold text-gray-700">[[${#numbers.formatCurrency(item.pricePerUnit * item.quantity)}]]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${orders.isEmpty()}" class="text-center py-12">
+                <p class="text-gray-500">You have not placed any orders yet.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
