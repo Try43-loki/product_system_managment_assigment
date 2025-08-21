@@ -75,7 +75,7 @@ Follow these steps to get the project running on your local machine.
     ```
 3.  Set the `ddl-auto` property. For the first run, use `update`:
     ```properties
-    spring.jpa.hibernate.ddl-auto=create
+    spring.jpa.hibernate.ddl-auto=update
     ```
     After the first successful run, change this to `update` to preserve your data on subsequent restarts.
 
