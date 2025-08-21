@@ -73,7 +73,7 @@ Follow these steps to get the project running on your local machine.
     spring.datasource.username=your_mysql_username
     spring.datasource.password=your_mysql_password
     ```
-3.  Set the `ddl-auto` property. For the first run, use `create`:
+3.  Set the `ddl-auto` property. For the first run, use `update`:
     ```properties
     spring.jpa.hibernate.ddl-auto=create
     ```
