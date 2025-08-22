@@ -9,10 +9,5 @@ import java.util.Optional;
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, Integer> {
     Optional<Admin> findByUsername(String username);
-    // That's it!
-    // All standard CRUD methods like findAll(), findById(), save(), deleteById()
-    // are automatically available.
 
-    // You can also add custom query methods here if needed, for example:
-    // Optional<Admin> findByUsername(String username);
 }

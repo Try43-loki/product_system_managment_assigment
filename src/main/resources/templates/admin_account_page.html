@@ -10,32 +10,42 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50">
 
-<!-- Navigation Bar -->
-<nav class="bg-white shadow-md">
-    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-        <div class="text-xl font-bold text-gray-800">Admin Dashboard</div>
-        <div>
-            <a th:href="@{/products}" class="text-gray-700 hover:text-indigo-600 mr-6 font-medium">Product Management</a>
-            <a th:href="@{/logout}" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">Logout</a>
+<!-- Redesigned Navigation Bar -->
+<nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a th:href="@{/admin/account}" class="flex items-center space-x-3">
+            <span class="text-xl font-bold text-gray-800">Admin Dashboard</span>
+        </a>
+        <div class="flex items-center space-x-6">
+            <a th:href="@{/products}" class="text-gray-600 hover:text-indigo-600 font-semibold flex items-center space-x-2">
+                <i class="fas fa-box-open"></i>
+                <span>Product Management</span>
+            </a>
+            <a th:href="@{/logout}" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
         </div>
     </div>
 </nav>
 
 <!-- Main Content -->
-<div class="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
+<div class="container mx-auto max-w-5xl p-4 sm:p-6 lg:p-8">
 
     <!-- Header -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900">My Account</h1>
-        <p class="text-gray-600 mt-1">Here are your administrative details and a summary of your products.</p>
+        <p class="text-gray-600 mt-1">Greeting there, Today is good day for your business</p>
     </div>
 
     <!-- Main Card Layout -->
@@ -44,39 +54,40 @@
         <!-- Profile Information Card -->
         <div class="md:col-span-1 bg-white rounded-xl shadow-lg p-6 h-fit">
             <h2 class="text-xl font-semibold text-gray-800 border-b pb-3">Profile Information</h2>
-            <div class="mt-4 space-y-3 text-gray-700">
+            <div class="mt-4 space-y-4 text-gray-700">
                 <div>
                     <p class="text-sm font-medium text-gray-500">Username</p>
-                    <p class="font-semibold" th:text="${admin.username}"></p>
+                    <p class="font-semibold text-lg" th:text="${admin.username}"></p>
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500">Email</p>
                     <p class="font-semibold" th:text="${admin.email}"></p>
                 </div>
-                <!-- New Balance Display -->
-                <div class="border-t pt-3 mt-3">
+                <div class="border-t pt-4">
                     <p class="text-sm font-medium text-gray-500">Account Balance</p>
-                    <p class="font-bold text-lg text-green-600" th:text="${#numbers.formatCurrency(admin.balance)}"></p>
+                    <p class="font-bold text-2xl text-green-600" th:text="${#numbers.formatCurrency(admin.balance)}"></p>
                 </div>
             </div>
         </div>
 
         <!-- Product Overview Card -->
         <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-6">
-            <h2 class="text-2xl font-bold text-gray-800">Product Overview</h2>
-            <p class="mt-2 text-gray-600">
-                You are currently managing <strong th:text="${productCount}">0</strong> products.
-            </p>
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-800">Product Inventory</h2>
+                <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm font-bold rounded-full" th:text="${productCount} + ' Products'"></span>
+            </div>
+            <p class="mt-2 text-gray-600">A quick look at your current product stock.</p>
 
             <!-- Product Grid -->
-            <div class="mt-6 border-t pt-4">
-                <div th:if="${!products.isEmpty()}" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div class="mt-6 border-t pt-4 h-[400px] overflow-hidden rounded-md overflow-y-scroll"  >
+                <div th:if="${!products.isEmpty()}" class="grid grid-cols-2 sm:grid-cols-3 gap-6">
                     <!-- Loop through products -->
-                    <div th:each="product : ${products}" class="text-center">
+                    <div th:each="product : ${products}" class="bg-gray-50 rounded-lg p-3 text-center border border-gray-200">
                         <img th:src="${product.imageUrl}" th:alt="${product.name}"
-                             class="w-full h-24 object-cover rounded-lg shadow-md"
+                             class="w-full h-24 object-cover rounded-md shadow-sm"
                              onerror="this.onerror=null;this.src='https://placehold.co/100x100/e2e8f0/4a5568?text=N/A';">
-                        <p class="mt-2 text-xs font-medium text-gray-700 truncate" th:text="${product.name}">Product Name</p>
+                        <p class="mt-2 text-sm font-semibold text-gray-800 truncate" th:text="${product.name}">Product Name</p>
+                        <p class="text-xs text-gray-500">Stock: <span class="font-bold text-gray-700" th:text="${product.stockQuantity}"></span></p>
                     </div>
                 </div>
                 <div th:if="${products.isEmpty()}" class="text-center text-gray-500 py-8">

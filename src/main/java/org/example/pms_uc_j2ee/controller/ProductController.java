@@ -5,6 +5,8 @@ import org.example.pms_uc_j2ee.model.Admin;
 import org.example.pms_uc_j2ee.model.Product;
 import org.example.pms_uc_j2ee.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/products")
@@ -25,10 +29,25 @@ public class ProductController {
     }
 
     @GetMapping
-    public String listProducts(Model model) {
-        List<Product> productList = productRepository.findAll();
-        model.addAttribute("products", productList);
-        return "product_index";
+    public String listProducts(Model model,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5); // Show 5 products per page
+
+        Page<Product> productPage = productRepository.findAll(PageRequest.of(currentPage - 1, pageSize));
+
+        model.addAttribute("productPage", productPage);
+
+        int totalPages = productPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "product_index"; // Renders templates/product_index.html
     }
 
     @GetMapping("/new")
@@ -51,9 +70,6 @@ public class ProductController {
         }
     }
 
-    /**
-     * UPDATED: Saves a product and automatically assigns the logged-in admin.
-     */
     @PostMapping("/save")
     public String saveProduct(@ModelAttribute("product") Product product, HttpSession session, RedirectAttributes redirectAttributes) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInUser");

@@ -28,10 +28,6 @@ public class Admin {
     @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
 
-    /**
-     * The admin's account balance, which accumulates from product sales.
-     * Initialized to BigDecimal.ZERO to prevent NullPointerExceptions.
-     */
     @Column(name = "balance", precision = 10, scale = 2)
     private BigDecimal balance = BigDecimal.ZERO;
 }

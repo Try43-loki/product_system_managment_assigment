@@ -23,9 +23,6 @@ public class AdminAccountController {
         this.productRepository = productRepository;
     }
 
-    /**
-     * Displays the admin's account page with their profile and product summary.
-     */
     @GetMapping
     public String showAdminAccountPage(HttpSession session, Model model) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInUser");

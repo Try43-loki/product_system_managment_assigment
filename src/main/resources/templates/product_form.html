@@ -10,94 +10,145 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-100">
 
-<!-- Main Container -->
-<div class="container mx-auto max-w-3xl p-4 sm:p-6 lg:p-8">
+<!-- Redesigned Navigation Bar -->
+<nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a th:href="@{/admin/account}" class="text-xl font-bold flex items-center space-x-2 text-gray-800">
+            <span>Admin Dashboard</span>
+        </a>
+        <div class="flex items-center space-x-8">
+            <a th:href="@{/products}" class="text-indigo-600 font-semibold flex items-center space-x-2">
+                <i class="fas fa-box-open"></i>
+                <span>Product Management</span>
+            </a>
+            <a th:href="@{/logout}" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
 
     <!-- Form Card -->
-    <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6" th:text="${pageTitle}">Add New Product</h1>
+    <div class="bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6" th:text="${pageTitle}">Add New Product</h1>
 
         <!-- Form starts here -->
-        <form th:action="@{/products/save}" method="post" th:object="${product}" class="space-y-6">
+        <form th:action="@{/products/save}" method="post" th:object="${product}">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Left Column: Form Fields -->
+                <div class="md:col-span-2 space-y-6">
+                    <input type="hidden" th:field="*{productId}" />
 
-            <!-- Hidden field for the ID, crucial for updates -->
-            <input type="hidden" th:field="*{productId}" />
+                    <!-- Product Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                        <input type="text" id="name" th:field="*{name}" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
 
-            <!-- Product Name Field -->
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
-                <div class="mt-1">
-                    <input type="text" id="name" th:field="*{name}" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
-            </div>
-
-            <!-- Description Field -->
-            <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                <div class="mt-1">
+                    <!-- Description -->
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                         <textarea id="description" th:field="*{description}" rows="4"
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                </div>
-            </div>
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                    </div>
 
-            <!-- Price and Stock Quantity (side-by-side) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-                    <div class="mt-1">
-                        <input type="number" id="price" th:field="*{price}" required step="0.01" min="0"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    <!-- Price and Stock -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                            <input type="number" id="price" th:field="*{price}" required step="0.01" min="0"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="stockQuantity" class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+                            <input type="number" id="stockQuantity" th:field="*{stockQuantity}" required min="0"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <label for="stockQuantity" class="block text-sm font-medium text-gray-700">Stock Quantity</label>
-                    <div class="mt-1">
-                        <input type="number" id="stockQuantity" th:field="*{stockQuantity}" required min="0"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-                </div>
-            </div>
 
-            <!-- Color and Image URL (side-by-side) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="productColor" class="block text-sm font-medium text-gray-700">Color</label>
-                    <div class="mt-1">
-                        <input type="text" id="productColor" th:field="*{productColor}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    <!-- Color and Image URL -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="productColor" class="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                            <input type="text" id="productColor" th:field="*{productColor}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="imageUrl" class="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                            <input type="url" id="imageUrl" th:field="*{imageUrl}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <label for="imageUrl" class="block text-sm font-medium text-gray-700">Image URL</label>
-                    <div class="mt-1">
-                        <input type="url" id="imageUrl" th:field="*{imageUrl}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+
+                <!-- Right Column: Image Preview -->
+                <div class="md:col-span-1 my-6">
+                    <div id="imagePreviewContainer" class="sticky top-8">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Image Preview</label>
+                        <div class="mt-2 w-full h-64 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
+                            <img id="imagePreview" src="" alt="Image Preview" class="max-h-full max-w-full rounded-lg">
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Action Buttons -->
-            <div class="flex items-center justify-end space-x-4 pt-2">
-                <a th:href="@{/products}" class="px-5 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-200">
+            <div class="flex items-center justify-end space-x-4 pt-4 border-t mt-8">
+                <a th:href="@{/products}" class="px-6 py-2.5 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
                     Cancel
                 </a>
                 <button type="submit"
-                        class="px-5 py-2.5 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                        class="px-6 py-2.5 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-colors">
                     Save Product
                 </button>
             </div>
         </form>
     </div>
 </div>
+
+<!-- JavaScript for Image Preview -->
+<script>
+    const imageUrlInput = document.getElementById('imageUrl');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const defaultPlaceholder = 'https://placehold.co/400x300/e2e8f0/4a5568?text=Image+Preview';
+
+    // Function to update the preview
+    const updatePreview = () => {
+        const url = imageUrlInput.value;
+        if (url && url.trim() !== '') {
+            imagePreview.src = url;
+        } else {
+            imagePreview.src = defaultPlaceholder;
+        }
+    };
+
+    // Handle errors if the image URL is invalid
+    imagePreview.onerror = () => {
+        imagePreview.src = defaultPlaceholder;
+    };
+
+    // Add event listener to the input field
+    imageUrlInput.addEventListener('input', updatePreview);
+
+    // Also update preview when the page loads if there's already a value (for editing)
+    document.addEventListener('DOMContentLoaded', updatePreview);
+</script>
 
 </body>
 </html>
