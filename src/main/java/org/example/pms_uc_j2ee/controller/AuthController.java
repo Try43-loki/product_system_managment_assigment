@@ -26,6 +26,11 @@ public class AuthController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/")
+    public String redirectToLogin() {
+        return "redirect:/login";
+    }
+
     @GetMapping("/login")
     public String showLoginPage() {
         return "login"; // Renders templates/login.html
@@ -36,37 +41,32 @@ public class AuthController {
                                @RequestParam String password,
                                HttpSession session) {
 
-        // 1. Check if the user is an Admin
         Optional<Admin> adminOptional = adminRepository.findByUsername(username);
         if (adminOptional.isPresent()) {
             Admin admin = adminOptional.get();
-            // IMPORTANT: In a real app, you must compare hashed passwords!
             if (password.equals(admin.getPassword())) {
                 session.setAttribute("loggedInUser", admin);
                 session.setAttribute("isAdmin", true);
-                return "redirect:/home"; // UPDATED: Redirect admins to the home page
+                return "redirect:/home";
             }
         }
 
-        // 2. If not an admin, check if the user is a regular User
-        Optional<AppUser> userOptional = userRepository.findByEmail(username); // Assuming login with email for users
+        Optional<AppUser> userOptional = userRepository.findByEmail(username);
         if (userOptional.isPresent()) {
             AppUser user = userOptional.get();
             if (password.equals(user.getPassword())) {
                 session.setAttribute("loggedInUser", user);
                 session.setAttribute("isAdmin", false);
-                return "redirect:/home"; // UPDATED: Redirect users to the home page
+                return "redirect:/home";
             }
         }
 
-        // 3. If no match is found, return to login with an error parameter
         return "redirect:/login?error";
     }
 
 
     @GetMapping("/home")
     public String showHomePage(HttpSession session) {
-        // Protect the route: if no one is logged in, redirect to login
         if (session.getAttribute("loggedInUser") == null) {
             return "redirect:/login";
         }
