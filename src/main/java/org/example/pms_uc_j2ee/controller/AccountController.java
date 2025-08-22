@@ -64,7 +64,7 @@ public class AccountController {
             user.setBalance(user.getBalance().add(amount));
             userRepository.save(user);
             session.setAttribute("loggedInUser", user); // Update session object
-            redirectAttributes.addFlashAttribute("successMessage", "Successfully deposited " + amount + " into your account.");
+            redirectAttributes.addFlashAttribute("successMessage", "Successfully deposited " + amount + " $ into your account.");
         });
 
         return "redirect:/account";

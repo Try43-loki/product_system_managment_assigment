@@ -7,10 +7,6 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Represents the User entity, now with a balance for their account.
- */
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "password")

@@ -24,11 +24,6 @@ public class ShopController {
         this.productRepository = productRepository;
     }
 
-    /**
-     * Displays the main shop page with a list of all available products.
-     * @param model The Model object to pass data to the view.
-     * @return The name of the Thymeleaf template to render.
-     */
     @GetMapping
     public String showShopPage(Model model) {
         // Fetch all products from the database

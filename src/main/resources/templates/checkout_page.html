@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -18,13 +19,14 @@
 </head>
 <body class="bg-gray-100">
 
-<!-- Navigation Bar -->
-<nav class="bg-white shadow-md">
-  <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-    <a th:href="@{/home}" class="text-xl font-bold text-gray-800">My Application</a>
-    <div>
-      <a th:href="@{/logout}" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">Logout</a>
-    </div>
+<!-- Redesigned Navigation Bar -->
+<nav class="bg-white shadow-sm">
+  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <a th:href="@{/home}" class="text-2xl font-bold text-gray-800">UC_SHOPPING</a>
+    <a th:href="@{/logout}" class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </a>
   </div>
 </nav>
 
@@ -42,7 +44,6 @@
           <p class="font-medium text-gray-800" th:text="${item.product.name}"></p>
           <p class="text-sm text-gray-500" th:text="'Qty: ' + ${item.quantity}"></p>
         </div>
-        <!-- FIX: Simplified the multiplication expression -->
         <p class="font-semibold text-gray-900" th:text="${#numbers.formatCurrency(item.product.price * item.quantity)}"></p>
       </div>
       <!-- Total -->
@@ -66,7 +67,6 @@
         </div>
         <div class="flex justify-between font-bold text-base pt-2 border-t mt-2">
           <span>Remaining Balance:</span>
-          <!-- FIX: Changed subtraction to use the .subtract() method for BigDecimal -->
           <span th:text="${#numbers.formatCurrency(userBalance.subtract(total))}"></span>
         </div>
       </div>

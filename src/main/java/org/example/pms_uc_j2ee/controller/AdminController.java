@@ -15,9 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Controller to handle web requests related to Admin management.
- */
 @Controller
 @RequestMapping("/admins") // All handler methods in this class are relative to the /admins path
 public class AdminController {
@@ -29,10 +26,6 @@ public class AdminController {
         this.adminRepository = adminRepository;
     }
 
-    /**
-     * READ: Handles GET requests to /admins.
-     * Fetches all admins from the database and displays them on the index page.
-     */
     @GetMapping
     public String listAdmins(Model model) {
         List<Admin> adminList = adminRepository.findAll();
@@ -40,10 +33,6 @@ public class AdminController {
         return "index"; // Renders templates/index.html
     }
 
-    /**
-     * CREATE Part 1: Handles GET requests to /admins/new.
-     * Displays the form for creating a new admin.
-     */
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         // Create a new Admin object to bind form data
@@ -52,10 +41,6 @@ public class AdminController {
         return "admin_form"; // Renders templates/admin_form.html
     }
 
-    /**
-     * CREATE Part 2: Handles POST requests to /admins/save.
-     * Processes the form submission and saves the new admin.
-     */
     @PostMapping("/save")
     public String saveAdmin(@ModelAttribute("admin") Admin admin, RedirectAttributes redirectAttributes) {
         adminRepository.save(admin);
@@ -63,10 +48,6 @@ public class AdminController {
         return "redirect:/admins";
     }
 
-    /**
-     * UPDATE Part 1: Handles GET requests to /admins/edit/{id}.
-     * Fetches an existing admin by their ID and displays the edit form.
-     */
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Admin> adminOptional = adminRepository.findById(id);
@@ -80,10 +61,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * DELETE: Handles GET requests to /admins/delete/{id}.
-     * Deletes an admin by their ID.
-     */
     @GetMapping("/delete/{id}")
     public String deleteAdmin(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         try {

@@ -7,14 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Spring Data JPA repository for the Product entity.
- * This interface provides all standard CRUD (Create, Read, Update, Delete)
- * operations for Product objects out of the box.
- */
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-    // No method implementations are needed here.
-    // Spring Data JPA provides them automatically.
+
     List<Product> findByAdmin_AdminId(Integer adminId);
 }

@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
-/**
- * Controller to handle user and admin authentication and session management.
- */
+
 @Controller
 public class AuthController {
 
@@ -28,17 +26,11 @@ public class AuthController {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Displays the login page.
-     */
     @GetMapping("/login")
     public String showLoginPage() {
         return "login"; // Renders templates/login.html
     }
 
-    /**
-     * Processes the login form submission, creates a session, and redirects to the appropriate page based on role.
-     */
     @PostMapping("/login")
     public String processLogin(@RequestParam String username,
                                @RequestParam String password,
@@ -52,7 +44,7 @@ public class AuthController {
             if (password.equals(admin.getPassword())) {
                 session.setAttribute("loggedInUser", admin);
                 session.setAttribute("isAdmin", true);
-                return "redirect:/admin/account"; // UPDATED: Redirect admins to their account page
+                return "redirect:/home"; // UPDATED: Redirect admins to the home page
             }
         }
 
@@ -63,7 +55,7 @@ public class AuthController {
             if (password.equals(user.getPassword())) {
                 session.setAttribute("loggedInUser", user);
                 session.setAttribute("isAdmin", false);
-                return "redirect:/account"; // UPDATED: Redirect users to their account page
+                return "redirect:/home"; // UPDATED: Redirect users to the home page
             }
         }
 
@@ -71,9 +63,7 @@ public class AuthController {
         return "redirect:/login?error";
     }
 
-    /**
-     * Displays the central home/dashboard page after login.
-     */
+
     @GetMapping("/home")
     public String showHomePage(HttpSession session) {
         // Protect the route: if no one is logged in, redirect to login
@@ -84,9 +74,6 @@ public class AuthController {
     }
 
 
-    /**
-     * Handles user logout by invalidating the session.
-     */
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // Clear the session
